@@ -1,0 +1,2 @@
+include ':app', ':servicelibrary'
+rootProject.name='WeatherApp'

@@ -1,0 +1,7 @@
+project.ext {
+    dependencyVersion = [
+            rxJavaVersion   : "2.2.9",
+            rxKotlin        : "2.2.0",
+            rxAndroidVersion: "2.1.1"
+    ]
+}

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.testapp.weatherapp.mainui.MainActivity">
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/zipCodeEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:hint="Zipcode"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/cityEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:hint="City"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/zipCodeEditText" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/zipCityBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="zipCodeEditText,cityEditText" />
+
+    <EditText
+        android:id="@+id/latitudeEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="6"
+        android:hint="Latitude"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/longitudeEditText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cityEditText" />
+
+    <EditText
+        android:id="@+id/longitudeEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:ems="6"
+        android:hint="Longitude"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/searchButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/latitudeEditText"
+        app:layout_constraintTop_toBottomOf="@id/cityEditText" />
+
+    <Spinner
+        android:id="@+id/countrySpinner"
+        android:layout_width="0dp"
+        android:layout_height="76dp"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toStartOf="@id/searchButton"
+        app:layout_constraintStart_toEndOf="@id/zipCityBarrier"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="160dp"
+        android:layout_height="115dp"
+        android:layout_margin="8dp"
+        android:text="Search By zipcode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/geoLocationSearchBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="latitudeEditText,longitudeEditText,searchButton" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/weatherItemRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/geoLocationSearchBarrier"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
