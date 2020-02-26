@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.testapp.weatherapp.utilities.SingletonHolder
 
-@Database(entities = arrayOf(QueryItem::class), version = 1)
+@Database(entities = [QueryItem::class], version = 1)
 abstract class WeatherDatabase : RoomDatabase() {
     abstract fun queryItemDao(): QueryItemDao
 
