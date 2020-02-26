@@ -1,5 +1,6 @@
 package com.testapp.weatherapp.mainui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.testapp.servicelibrary.models.WeatherBroadcast
 import com.testapp.weatherapp.R
 import kotlinx.android.synthetic.main.weather_item_view.view.*
 import java.text.SimpleDateFormat
+import java.util.*
 
 class WeatherItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val imageView: ImageView = view.weatherIconImageView
@@ -26,7 +28,7 @@ class WeatherItemRecyclerViewAdapter(
 ) :
 
     RecyclerView.Adapter<WeatherItemViewHolder>() {
-    val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    private val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherItemViewHolder {
@@ -38,6 +40,7 @@ class WeatherItemRecyclerViewAdapter(
         return weatherItemManager.list.size
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: WeatherItemViewHolder, position: Int) {
         val item = weatherItemManager.list[position]
         holder.dateTextView.text = formatter.format(item.date)
