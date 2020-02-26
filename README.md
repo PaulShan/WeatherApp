@@ -12,9 +12,10 @@ This module handle the api calls and mapping the api response to the data that t
 
 ### app
 This module handle the weather list and recent search.
-1. Weather list is in the mainui package and the UI is separated to several classes like BindListener, DbHelper and etc as well as the Activity class and RecyclerViewAdapter class since the UI logic is complex.
+1. Weather list is in the mainui package and the UI is separated to several classes like BindListener, DbHelper and etc as well as the Activity class and RecyclerViewAdapter class.
 1. Recent search package just include the Activity and RecyclerViewAdapter classes.
 
+The logic of main ui is complex, here I choose extension functions to separate logic according to what they are doing.
 
 ## Test
 There three tests, when running the test, the api response will be printed.
