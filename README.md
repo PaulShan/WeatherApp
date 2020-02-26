@@ -22,3 +22,5 @@ There three tests, when running the test, the api response will be printed.
 1. WeatherRepositoryTest.testQueryByZipCode test searching by zip code.
 1. WeatherRepositoryTest.testQueryByGeoLocation test searching by geo location.
 
+UI tests and Db tests can be added later.
+
