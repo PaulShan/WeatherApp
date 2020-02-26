@@ -3,8 +3,6 @@ package com.testapp.weatherapp.mainui
 import android.view.View
 import android.widget.Toast
 import androidx.core.text.isDigitsOnly
-import com.testapp.servicelibrary.models.WeatherBroadcast
-import com.testapp.weatherapp.R
 import com.testapp.weatherapp.database.createQueryItemByCity
 import com.testapp.weatherapp.database.createQueryItemByLatitudeLongitude
 import com.testapp.weatherapp.database.createQueryItemByZipCode
