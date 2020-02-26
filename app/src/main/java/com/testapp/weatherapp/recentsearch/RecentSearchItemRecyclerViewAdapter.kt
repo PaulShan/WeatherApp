@@ -24,13 +24,13 @@ class RecentSearchItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val deleteButton: Button = view.deleteButton
 }
 
-class RecentSearchItemRecyclerViewAdapter(val activity: Activity) :
+class RecentSearchItemRecyclerViewAdapter(private val activity: Activity) :
     RecyclerView.Adapter<RecentSearchItemViewHolder>() {
     private val compositeDisposable = CompositeDisposable()
 
     private val dao = WeatherDatabase.getInstance(activity).queryItemDao()
     private val inflater = LayoutInflater.from(activity)
-    var list: List<QueryItem> = listOf()
+    private var list: List<QueryItem> = listOf()
     fun updateFromDb() {
         val d = dao
             .getAllQueryItems()
