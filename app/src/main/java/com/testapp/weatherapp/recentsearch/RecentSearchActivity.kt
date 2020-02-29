@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_recent_search.*
 
 class RecentSearchActivity : AppCompatActivity() {
 
-    private lateinit var recyclerViewAdapter: RecentSearchItemRecyclerViewAdapter
+    internal lateinit var recyclerViewAdapter: RecentSearchItemRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +26,4 @@ class RecentSearchActivity : AppCompatActivity() {
         super.onDestroy()
         recyclerViewAdapter.clear()
     }
-
-
 }
