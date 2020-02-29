@@ -1,5 +1,6 @@
 package com.testapp.servicelibrary
 
+import com.testapp.servicelibrary.apiservice.ApiService
 import com.testapp.servicelibrary.apiservice.ApiServiceProvider
 import com.testapp.servicelibrary.apiservice.response.WeatherResponse
 import com.testapp.servicelibrary.apiservice.response.WeatherResponseItem
@@ -10,21 +11,21 @@ import io.reactivex.Single
 import java.util.*
 import kotlin.math.roundToInt
 
-class WeatherRepository {
+class WeatherRepository(val apiService: ApiService = ApiServiceProvider.apiService) {
     fun getWeatherByCityName(cityName: String, country: String): Single<WeatherBroadcast> {
         val shortCountryName = CountryNameMap.getShortName(country)
         val cityWithCountry = "$cityName,$shortCountryName"
-        return ApiServiceProvider.apiService.getWeatherDataByCityName(cityWithCountry).map { it.convert() }
+        return apiService.getWeatherDataByCityName(cityWithCountry).map { it.convert() }
     }
 
     fun getWeatherByZipCode(zipcode: String, country: String): Single<WeatherBroadcast> {
         val shortCountryName = CountryNameMap.getShortName(country)
         val zipCodeWithCountry = "$zipcode,$shortCountryName"
-        return ApiServiceProvider.apiService.getWeatherDataByZipCode(zipCodeWithCountry).map { it.convert() }
+        return apiService.getWeatherDataByZipCode(zipCodeWithCountry).map { it.convert() }
     }
 
     fun getWeatherByGeoLocation(latitude: Double, longitude: Double): Single<WeatherBroadcast> {
-        return ApiServiceProvider.apiService.getWeatherDataByGeoLocation(latitude, longitude)
+        return apiService.getWeatherDataByGeoLocation(latitude, longitude)
             .map { it.convert() }
     }
 }
