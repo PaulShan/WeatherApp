@@ -15,7 +15,7 @@ class WeatherRepositoryTest {
 
     @Test
     fun testQueryByZipCode() {
-        val testObserver = weatherDataRepository.getWeatherByZipCode("2077", "AU").test()
+        val testObserver = weatherDataRepository.getWeatherByZipCode("2077", "Australia").test()
         testObserver.assertComplete()
         testObserver.assertValueCount(1)
     }
