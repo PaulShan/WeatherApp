@@ -64,16 +64,12 @@ class MainActivityPresenterTest {
         mainActivityPresenter.addQueryItemToDb(searchItem)
 
         val size2 = MemoryDao.daoObject().getAllQueryItems().blockingGet().size
-
         assertEquals(size1 + 1, size2)
     }
 
     @Test
     fun `query weather by city name, weather data will be rendered`() {
-        val view = mockViewWithDao()
-        val repository = WeatherRepositoryProvider.provideNormalRepository()
-
-        mainActivityPresenter = MainActivityPresenter(view, repository)
+        setupMemoryDaoAndRepository()
 
         val single = mainActivityPresenter.getWeatherByCityName("Sydney", "Australian")
         mainActivityPresenter.subscribeWeatherData(single, QueryMode.ByCity)
@@ -84,10 +80,7 @@ class MainActivityPresenterTest {
 
     @Test
     fun `query weather by zip code, weather data will be rendered`() {
-        val view = mockViewWithDao()
-        val repository = WeatherRepositoryProvider.provideNormalRepository()
-
-        mainActivityPresenter = MainActivityPresenter(view, repository)
+        setupMemoryDaoAndRepository()
 
         val single = mainActivityPresenter.getWeatherByZipCode("2120", "Australian")
         mainActivityPresenter.subscribeWeatherData(single, QueryMode.ByZipcode)
@@ -98,22 +91,63 @@ class MainActivityPresenterTest {
 
     @Test
     fun `query weather by geo location, weather data will be rendered`() {
-        val view = mockViewWithDao()
-        val repository = WeatherRepositoryProvider.provideNormalRepository()
-
-        mainActivityPresenter = MainActivityPresenter(view, repository)
+        setupMemoryDaoAndRepository()
 
         val single = mainActivityPresenter.getWeatherByGeoLocation(1.0, 1.0)
         mainActivityPresenter.subscribeWeatherData(single, QueryMode.ByLatitudeLongitude)
 
         verify(view).renderWeatherData(TestData.getResponse().convert(), QueryMode.ByLatitudeLongitude)
+    }
 
+    @Test
+    fun `fail to query weather by city name, error ui will be rendered`() {
+        setupMemoryDaoAndErrorRepository()
+
+        val single = mainActivityPresenter.getWeatherByCityName("Sydney", "Australian")
+        mainActivityPresenter.subscribeWeatherData(single, QueryMode.ByCity)
+
+        verify(view).renderErrorForFailToGetWeatherData()
+
+    }
+
+    @Test
+    fun `fail to query weather  by zip code, error ui will be rendered`() {
+        setupMemoryDaoAndErrorRepository()
+
+        val single = mainActivityPresenter.getWeatherByZipCode("2120", "Australian")
+        mainActivityPresenter.subscribeWeatherData(single, QueryMode.ByZipcode)
+
+        verify(view).renderErrorForFailToGetWeatherData()
+    }
+
+    @Test
+    fun `fail to query weather by geo location, error ui will be rendered`() {
+        setupMemoryDaoAndErrorRepository()
+
+        val single = mainActivityPresenter.getWeatherByGeoLocation(1.0, 1.0)
+        mainActivityPresenter.subscribeWeatherData(single, QueryMode.ByLatitudeLongitude)
+
+        verify(view).renderErrorForFailToGetWeatherData()
     }
 
 
     private fun loadAndVerify(searchItem: QueryItem) {
         mainActivityPresenter.loadItem(searchItem.queryKey)
         verify(view).updateByQueryItem(searchItem)
+    }
+
+    private fun setupMemoryDaoAndRepository() {
+        view  = mockViewWithDao()
+        val repository = WeatherRepositoryProvider.provideNormalRepository()
+        mainActivityPresenter = MainActivityPresenter(view, repository)
+
+    }
+
+    private fun setupMemoryDaoAndErrorRepository() {
+        view  = mockViewWithDao()
+        val repository = WeatherRepositoryProvider.provideErrorRepository()
+        mainActivityPresenter = MainActivityPresenter(view, repository)
+
     }
 
     companion object {

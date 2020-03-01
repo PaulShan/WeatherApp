@@ -30,4 +30,22 @@ object WeatherRepositoryProvider {
 
         return WeatherRepository(mockApiService)
     }
+    val exception = Exception()
+    fun provideErrorRepository(): WeatherRepository {
+        val mockApiService = Mockito.mock(ApiService::class.java)
+
+        Mockito.`when`(mockApiService.getWeatherDataByCityName(any())).thenReturn(
+            Single.error(exception)
+        )
+
+        Mockito.`when`(mockApiService.getWeatherDataByZipCode(any())).thenReturn(
+            Single.error(exception)
+        )
+
+        Mockito.`when`(mockApiService.getWeatherDataByGeoLocation(any(), any())).thenReturn(
+            Single.error(exception)
+        )
+
+        return WeatherRepository(mockApiService)
+    }
 }
