@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.testapp.weatherapp.R
+import com.testapp.weatherapp.recentsearch.recyclerview.RecentSearchItemRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_recent_search.*
 
 class RecentSearchActivity : AppCompatActivity(), RecentSearchView {
