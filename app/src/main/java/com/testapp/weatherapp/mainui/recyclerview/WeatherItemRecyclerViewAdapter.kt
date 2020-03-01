@@ -1,4 +1,4 @@
-package com.testapp.weatherapp.mainui
+package com.testapp.weatherapp.mainui.recyclerview
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.testapp.servicelibrary.models.WeatherBroadcast
+import com.testapp.servicelibrary.models.WeatherItem
 import com.testapp.weatherapp.R
 import kotlinx.android.synthetic.main.weather_item_view.view.*
 import java.text.SimpleDateFormat
@@ -24,11 +25,11 @@ class WeatherItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
 class WeatherItemRecyclerViewAdapter(
     context: Context,
-    private val weatherItemManager: WeatherBroadcast
+    weatherBroadcast: WeatherBroadcast
 ) :
 
     RecyclerView.Adapter<WeatherItemViewHolder>() {
-    private val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+    private val presenter = WeatherItemRecyclerViewPresenter(weatherBroadcast)
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherItemViewHolder {
@@ -37,12 +38,21 @@ class WeatherItemRecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int {
-        return weatherItemManager.list.size
+        return presenter.size()
+    }
+
+    override fun onBindViewHolder(holder: WeatherItemViewHolder, position: Int) {
+        val item = presenter.getItem(position)
+        bindView(holder, item)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: WeatherItemViewHolder, position: Int) {
-        val item = weatherItemManager.list[position]
+    fun bindView(
+        holder: WeatherItemViewHolder,
+        item: WeatherItem
+    ) {
+        val formatter =
+            SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
         holder.dateTextView.text = formatter.format(item.date)
         holder.descriptionTextView.text = item.description
         holder.temperatureTextView.text = "${item.temperature} °C"

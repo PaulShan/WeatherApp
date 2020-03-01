@@ -5,6 +5,7 @@ import com.testapp.servicelibrary.country.CountryLongNames
 import com.testapp.servicelibrary.models.WeatherBroadcast
 import com.testapp.weatherapp.R
 import com.testapp.weatherapp.database.QueryItem
+import com.testapp.weatherapp.mainui.recyclerview.WeatherItemRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 fun MainActivity.updateByQueryItem(it: QueryItem) {

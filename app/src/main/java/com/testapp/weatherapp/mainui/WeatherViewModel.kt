@@ -14,6 +14,5 @@ enum class QueryMode {
 
 class WeatherViewModel : ViewModel() {
     var weatherDataManager: WeatherBroadcast? = null
-    var queryMode: QueryMode =
-        QueryMode.ByZipcode
+    var queryMode: QueryMode = QueryMode.ByZipcode
 }
