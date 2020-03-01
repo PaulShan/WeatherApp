@@ -1,6 +1,6 @@
 package com.testapp.servicelibrary.models
 
-class WeatherBroadcast(
+data class WeatherBroadcast(
     val list: List<WeatherItem>,
     val country: String,
     val city: String,

@@ -1,32 +1,39 @@
 package com.testapp.weatherapp.mainui
 
 import com.nhaarman.mockitokotlin2.verify
+import com.testapp.servicelibrary.convert
 import com.testapp.weatherapp.database.QueryItem
 import com.testapp.weatherapp.database.createQueryItemByCity
 import com.testapp.weatherapp.utilities.MemoryDao
+import com.testapp.weatherapp.utilities.TestData
+import com.testapp.weatherapp.utilities.WeatherRepositoryProvider
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
-import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class MainActivityPresenterTest {
     lateinit var mainActivityPresenter: MainActivityPresenter
-    @Mock
+
     lateinit var view: MainActivityInterface
 
     @Before
     fun setUp() {
-        Mockito.`when`(view.provideDao()).thenReturn(MemoryDao.daoObject())
+        view = mockViewWithDao()
         mainActivityPresenter = MainActivityPresenter(view)
+    }
+
+    private fun mockViewWithDao(): MainActivityInterface {
+        val view = Mockito.mock(MainActivityInterface::class.java)
+        Mockito.`when`(view.provideDao()).thenReturn(MemoryDao.daoObject())
+        return view
     }
 
     @Test
@@ -59,6 +66,48 @@ class MainActivityPresenterTest {
         val size2 = MemoryDao.daoObject().getAllQueryItems().blockingGet().size
 
         assertEquals(size1 + 1, size2)
+    }
+
+    @Test
+    fun `query weather by city name, weather data will be rendered`() {
+        val view = mockViewWithDao()
+        val repository = WeatherRepositoryProvider.provideNormalRepository()
+
+        mainActivityPresenter = MainActivityPresenter(view, repository)
+
+        val single = mainActivityPresenter.getWeatherByCityName("Sydney", "Australian")
+        mainActivityPresenter.subscribeWeatherData(single, QueryMode.ByCity)
+
+        verify(view).renderWeatherData(TestData.getResponse().convert(), QueryMode.ByCity)
+
+    }
+
+    @Test
+    fun `query weather by zip code, weather data will be rendered`() {
+        val view = mockViewWithDao()
+        val repository = WeatherRepositoryProvider.provideNormalRepository()
+
+        mainActivityPresenter = MainActivityPresenter(view, repository)
+
+        val single = mainActivityPresenter.getWeatherByZipCode("2120", "Australian")
+        mainActivityPresenter.subscribeWeatherData(single, QueryMode.ByZipcode)
+
+        verify(view).renderWeatherData(TestData.getResponse().convert(), QueryMode.ByZipcode)
+
+    }
+
+    @Test
+    fun `query weather by geo location, weather data will be rendered`() {
+        val view = mockViewWithDao()
+        val repository = WeatherRepositoryProvider.provideNormalRepository()
+
+        mainActivityPresenter = MainActivityPresenter(view, repository)
+
+        val single = mainActivityPresenter.getWeatherByGeoLocation(1.0, 1.0)
+        mainActivityPresenter.subscribeWeatherData(single, QueryMode.ByLatitudeLongitude)
+
+        verify(view).renderWeatherData(TestData.getResponse().convert(), QueryMode.ByLatitudeLongitude)
+
     }
 
 

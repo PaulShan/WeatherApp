@@ -1,4 +1,4 @@
-package com.testapp.servicelibrary
+package com.testapp.weatherapp.utilities
 
 import com.google.gson.Gson
 import com.testapp.servicelibrary.apiservice.response.WeatherResponse

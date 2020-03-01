@@ -9,8 +9,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class MainActivityPresenter(val view: MainActivityInterface) {
-    private val repository = WeatherRepository()
+class MainActivityPresenter(val view: MainActivityInterface, private val repository:WeatherRepository = WeatherRepository()) {
+
     private val compositeDisposable = CompositeDisposable()
 
     fun loadLastSearch() {
