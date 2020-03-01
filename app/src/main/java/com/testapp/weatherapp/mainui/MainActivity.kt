@@ -5,25 +5,41 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.testapp.servicelibrary.WeatherRepository
 import com.testapp.servicelibrary.country.CountryLongNames
+import com.testapp.servicelibrary.models.WeatherBroadcast
 import com.testapp.weatherapp.R
+import com.testapp.weatherapp.database.QueryItem
+import com.testapp.weatherapp.database.QueryItemDao
+import com.testapp.weatherapp.database.WeatherDatabase
 import com.testapp.weatherapp.recentsearch.RecentSearchActivity
-import com.testapp.weatherapp.database.*
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity() {
-    val repository = WeatherRepository()
-    val compositeDisposable = CompositeDisposable()
-    lateinit var dao: QueryItemDao
+class MainActivity : AppCompatActivity(), MainActivityInterface {
+    override fun renderWeatherData(weatherData: WeatherBroadcast, queryMode: QueryMode) {
+        renderWeatherDataExtend(weatherData, queryMode)
+    }
+
+    override fun renderErrorForFailToGetWeatherData() {
+        progressBar.visibility = View.GONE
+        Toast.makeText(this, "Fail to retrieve weather data", Toast.LENGTH_SHORT).show()    }
+
+    override fun updateByQueryItem(queryItem: QueryItem) {
+        updateByQueryItemExtend(queryItem)
+    }
+
+    override fun provideDao(): QueryItemDao {
+        return WeatherDatabase.getInstance(this).queryItemDao()
+    }
+
+    val presenter = MainActivityPresenter(this)
+
     var menu: Menu? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         weatherItemRecycleView.layoutManager = LinearLayoutManager(this)
-        dao = WeatherDatabase.getInstance(this).queryItemDao()
+
         bindListener()
 
         val arrayAdapter = ArrayAdapter<String>(
@@ -46,12 +62,8 @@ class MainActivity : AppCompatActivity() {
             loadWeatherData()
         }
         setCountry("Australia")
-        val d = dao.getLatestQueryItem()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(::updateByQueryItem, Timber::e)
 
-        compositeDisposable.add(d)
+        presenter.loadLastSearch()
     }
 
     fun getViewModel() = ViewModelProviders.of(this)[WeatherViewModel::class.java]
@@ -64,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
+        presenter.clear()
     }
 
     companion object {
@@ -88,13 +100,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == requestRecentSearch && resultCode == Activity.RESULT_OK) {
             val recentSearchKey = data?.getStringExtra(recentSearchDataKey)
-            if (recentSearchKey != null) {
-                val d = dao.getQueryItem(recentSearchKey)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(::updateByQueryItem, Timber::e)
-                compositeDisposable.add(d)
-            }
+            presenter.loadItem(recentSearchKey)
         }
         return super.onActivityResult(requestCode, resultCode, data)
     }

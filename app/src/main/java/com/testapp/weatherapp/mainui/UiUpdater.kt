@@ -8,7 +8,7 @@ import com.testapp.weatherapp.database.QueryItem
 import com.testapp.weatherapp.mainui.recyclerview.WeatherItemRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
-fun MainActivity.updateByQueryItem(it: QueryItem) {
+fun MainActivity.updateByQueryItemExtend(it: QueryItem) {
     val queryMode =
         QueryMode.valueOf(it.queryMode)
     updateSearchStatus(queryMode)
@@ -34,7 +34,7 @@ fun MainActivity.updateSearchStatus(queryMode: QueryMode) {
     }
 }
 
-fun MainActivity.renderWeatherData(
+fun MainActivity.renderWeatherDataExtend(
     weatherData: WeatherBroadcast,
     queryMode: QueryMode
 ) {

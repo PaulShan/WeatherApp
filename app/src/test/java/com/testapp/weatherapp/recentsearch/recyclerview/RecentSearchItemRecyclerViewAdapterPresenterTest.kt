@@ -2,10 +2,7 @@ package com.testapp.weatherapp.recentsearch.recyclerview
 
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.testapp.weatherapp.database.*
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Single
+import com.testapp.weatherapp.utilities.MemoryDao
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
@@ -32,7 +29,7 @@ class RecentSearchItemRecyclerViewAdapterPresenterTest {
         presenter.updateFromDb()
 
         verify(view).updateView()
-        Assert.assertArrayEquals(arrayOf(testItem1, testItem2, testItem3), presenter.list.toTypedArray())
+        Assert.assertArrayEquals(MemoryDao.currentList.toTypedArray(), presenter.list.toTypedArray())
     }
 
     @Test
@@ -53,6 +50,7 @@ class RecentSearchItemRecyclerViewAdapterPresenterTest {
 
     @Test
     fun `update from db, check the text`() {
+        MemoryDao.resetList()
         presenter.updateFromDb()
 
         Assert.assertEquals("Search Sydney in Australia", presenter.getQueryString(0))
@@ -60,46 +58,11 @@ class RecentSearchItemRecyclerViewAdapterPresenterTest {
         Assert.assertEquals("Search latitude -33.8678 longitude 151.2073", presenter.getQueryString(2))
     }
 
-    private val testCountry = "Australia"
-
-    private val testItem1 = createQueryItemByCity("Sydney", testCountry)
-    private val testItem2 = createQueryItemByZipCode("2001", testCountry)
-    private val testItem3 = createQueryItemByLatitudeLongitude(-33.8678, 151.2073, testCountry)
-
-
 
     @Before
     fun setUp() {
         presenter = RecentSearchItemRecyclerViewAdapterPresenter(view)
-        val currentList = mutableListOf(testItem1, testItem2, testItem3)
-        Mockito.`when`(view.provideDao()).thenReturn(object : QueryItemDao {
-            override fun getLatestQueryItem(): Maybe<QueryItem> {
-                val last = currentList.lastOrNull()
-                return last?.let { Maybe.just(it) } ?: Maybe.empty()
-
-            }
-
-            override fun getQueryItem(searchKey: String): Maybe<QueryItem> {
-                val item = currentList.firstOrNull { it.queryKey == searchKey }
-                return item?.let { Maybe.just(it) } ?: Maybe.empty()
-
-            }
-
-            override fun getAllQueryItems(): Single<List<QueryItem>> {
-                return Single.just(currentList)
-            }
-
-            override fun insertAll(vararg queryItem: QueryItem): Completable {
-                currentList.addAll(queryItem)
-                return Completable.complete()
-            }
-
-            override fun delete(queryItem: QueryItem): Completable {
-                currentList.remove(queryItem)
-                return Completable.complete()
-            }
-
-        })
+        Mockito.`when`(view.provideDao()).thenReturn(MemoryDao.daoObject())
     }
 
     companion object {
@@ -107,7 +70,6 @@ class RecentSearchItemRecyclerViewAdapterPresenterTest {
         @JvmStatic
         fun setupClass() {
             RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
-            RxAndroidPlugins.setMainThreadSchedulerHandler { Schedulers.trampoline() }
             RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         }
     }

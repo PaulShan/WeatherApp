@@ -5,9 +5,13 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.testapp.servicelibrary.models.WeatherBroadcast
 import com.testapp.servicelibrary.models.WeatherItem
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -21,7 +25,6 @@ class WeatherItemRecyclerViewPresenterTest {
 
     @Before
     fun setUp() {
-
         presenter = WeatherItemRecyclerViewPresenter(weatherBroadcast)
     }
 
@@ -32,8 +35,15 @@ class WeatherItemRecyclerViewPresenterTest {
 
         assertEquals(weatherBroadcast.list[index], item)
     }
-
-    val weatherBroadcast = WeatherBroadcast(
+    companion object {
+        @BeforeClass
+        @JvmStatic
+        fun setupClass() {
+            RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
+            RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
+        }
+    }
+    private val weatherBroadcast = WeatherBroadcast(
         country = "Australia",
         city = "Sydney",
         latitude = -33.8678,
