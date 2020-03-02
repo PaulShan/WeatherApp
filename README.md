@@ -18,10 +18,9 @@ This module handle the weather list and recent search.
 The logic of main ui is complex, here I choose extension functions to separate logic according to what they are doing.
 
 ## Test
-There three tests, when running the test, the api response will be printed.
-1. WeatherRepositoryTest.testQueryByCityName test searching by city.
-1. WeatherRepositoryTest.testQueryByZipCode test searching by zip code.
-1. WeatherRepositoryTest.testQueryByGeoLocation test searching by geo location.
+Threre three types of tests.
+1. Integrate tests which is in WeatherRepositoryTest which test the api service and transforming data.
+1. Db tests which is in WeatherDatabaseTest will test db reading and writing, but the tests are instrument test and need device or simulator.
+1. Other tests are unit test with mock object.
 
-UI tests and Db tests can be added later.
 
