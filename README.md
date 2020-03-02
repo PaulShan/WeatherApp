@@ -6,6 +6,7 @@
 
 ## Structure.
 There are two modules in this solution: servicelibrary and app.
+The app is based MVP framework. 
 
 ### servicelibrary
 This module handle the api calls and mapping the api response to the data that the app can consume.
