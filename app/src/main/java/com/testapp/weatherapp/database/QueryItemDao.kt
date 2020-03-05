@@ -22,4 +22,7 @@ interface QueryItemDao {
 
     @Delete
     fun delete(queryItem: QueryItem): Completable
+
+    @Query("Delete from QueryItemTable where queryKey = :searchKey")
+    fun deleteByKey(searchKey:String) :Completable
 }
